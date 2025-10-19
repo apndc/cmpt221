@@ -18,3 +18,34 @@ def get_all(table) -> list:
     
     finally:
         session.close()
+
+def get_one(table, **filters) -> object:
+    session = get_session()
+    try:
+        record = session.query(table).filter_by(**filters).first()
+        return record
+    finally:
+        session.close()
+
+
+def insert(record) -> None:
+        """Insert one record into a table
+            args:
+                record(object): record to insert into db
+
+            returns:
+                none
+        """
+        session = get_session()
+        try:
+            #insert one new record
+            session.add(record)
+            # 'save' the changes
+            session.commit()
+
+        except Exception as e:
+            session.rollback()
+            print("Error inserting records: ", e)
+
+        finally:
+            session.close()
