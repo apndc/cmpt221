@@ -8,6 +8,26 @@
         <h1>Sign Up</h1>
         <div>
             <!-- Create a sign up form here -->
+        <form method="post">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="FirstName" value="" required/>
+            <br>
+
+            <label for="LastName">Last Name:</label>
+            <input type="text" id="LastName" name="LastName" value="" required/> 
+            <br>
+
+            <label for="Email">Email:</label>
+            <input type="email" id="Email" name="Email" value="" required/>
+
+            <label for="PhoneNumber">Phone Number: </label>
+            <input type="tel" id="PhoneNumber" name="PhoneNumber" value="" pattern="[0-9]{10}" />
+
+            <label for="pwd">Password:</label><br>
+            <input type="password" id="pwd" name="pwd"><br><br>
+
+            <input type="submit" value="Submit">
+        </form>     
         </div>
 
         <br>
