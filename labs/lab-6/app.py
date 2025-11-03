@@ -1,6 +1,7 @@
 """app.py: render and route to webpages"""
 
 import os
+import bcrypt
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for
 from db.query import get_all
@@ -46,22 +47,54 @@ def create_app():
     @app.route('/signup', methods=['GET', 'POST'])
     def signup():
         """Sign up page: enables users to sign up"""
+        error: str = None
+        is_valid: bool = False
         #TODO: implement sign up logic here
         print(request.method)
         if request.method == 'POST':
-            try:
-                user=Users(FirstName=request.form["FirstName"],
-                LastName=request.form["LastName"],
-                Email=request.form["Email"],
-                PhoneNumber=request.form["PhoneNumber"],
-                Password=request.form["pwd"])
+                try:
+                    firstname=request.form["FirstName"].strip()
+                    lastname=request.form["LastName"].strip()
+                    email=request.form["Email"].strip()
+                    phonenumber=request.form["PhoneNumber"].strip()
+                    password=request.form["pwd"].strip()
 
-                insert(user)
-                return redirect(url_for('index'))
+                    #insert_stmt = insert(User).values(request.form)
 
-            except Exception as e:
-                print("Error inserting user:", e)
-                #return redirect(url_for('signup'))
+                    if request.form["FirstName"].isalpha():
+                        print(f'Input: {request.form["FirstName"]} is valid.')
+                        is_valid = True
+                    else: 
+                        error_msg = f'Input: {request.form["FirstName"]} is invalid! First name can only contain letters.'
+                        print(f'Input: {request.form["FirstName"]} is invalid!')
+                        error = error_msg
+
+                    if request.form["LastName"].isalpha():
+                        print(f'Input: {request.form["LastName"]} is valid.')
+                        is_valid = True
+                    else:
+                        error_msg = f'Input: {request.form["FirstName"]} is invalid! Last name can only contain letters.'
+                        print(f'Input: {request.form["FirstName"]} is invalid')
+                        error = error_msg
+                    
+                    if is_valid:
+                        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+                        hashed_password = hashed_password.decode('utf-8')
+
+                        user=Users(FirstName=firstname,
+                        LastName=lastname,
+                        Email=email,
+                        PhoneNumber=phonenumber,
+                        Password=hashed_password)
+                        insert(user)
+
+                    return redirect(url_for('index'))
+            
+                except Exception as e:
+                    print("Error inserting user:", e)
+                    return render_template('error.html', error=str(e))
+
+        #return redirect(url_for('signup'))
         return render_template('signup.html')
     
     @app.route('/login', methods=["GET", "POST"])
@@ -81,7 +114,7 @@ def create_app():
 
             except Exception as e:
                 print("Error during login:", e)
-                return render_template('login.html', error="An error occured. Please try again.")
+                return render_template('error.html', error=str(e))
         return render_template('login.html')
 
     @app.route('/users')
@@ -91,11 +124,18 @@ def create_app():
         
         return render_template('users.html', users=all_users)
 
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        print("An unexpected error occurred:")
+        traceback.print_exc()
+        return render_template('error.html', error=str(e)), 500
+
     @app.route('/success')
     def success():
         """Success page: displayed upon successful login"""
 
         return render_template('success.html')
+        
 
     
     return app
