@@ -2,6 +2,8 @@
 
 import os
 import bcrypt
+import logging 
+from logging.handlers import RotatingFileHandler
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for
 from db.query import get_all
@@ -17,6 +19,7 @@ db_name = os.getenv('db_name')
 db_owner = os.getenv('db_owner')
 db_pass = os.getenv('db_pass')
 db_url = f"postgresql://{db_owner}:{db_pass}@localhost/{db_name}"
+
 
 def create_app():
     """Create Flask application and connect to your DB"""
@@ -136,6 +139,24 @@ def create_app():
 
         return render_template('success.html')
         
+
+    #Logger
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+
+    # Configure a rotating log file (max 1MB per file, keep 3 backups)
+    log_handler = RotatingFileHandler('logs/app.log', maxBytes=1_000_000, backupCount=3)
+    log_handler.setLevel(logging.ERROR)  # only log errors and above
+
+    # Define the log format
+    formatter = logging.Formatter(
+        '%(asctime)s [%(levelname)s] in %(module)s: %(message)s'
+    )
+    log_handler.setFormatter(formatter)
+
+    # Attach the handler to the Flask app logger
+    app.logger.addHandler(log_handler)
+    app.logger.setLevel(logging.ERROR)
 
     
     return app
