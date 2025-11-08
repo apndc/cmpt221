@@ -21,26 +21,36 @@ def create_app():
                 template_folder=os.path.join(os.getcwd(), 'templates'), 
                 static_folder=os.path.join(os.getcwd(), 'static'))
     
-    # connect to db
-    # app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+    #connect to db
+    app.config["SQLALCHEMY_DATABASE_URI"] = db_url
     
-    # Initialize database
-    # with app.app_context():
-    #     if not init_database():
-    #         print("Failed to initialize database. Exiting.")
-            # exit(1)
+    #Initialize database
+    with app.app_context():
+        if not init_database():
+            print("Failed to initialize database. Exiting.")
+            exit(1)
 
-    # ===============================================================
-    # routes
-    # ===============================================================
+    #===============================================================
+    #routes
+    #===============================================================
 
-    # create a webpage based off of the html in templates/index.html
+    #create a webpage based off of the html in templates/index.html
     @app.route('/')
-    def index():
+    def home():
         """Home page"""
-        return render_template('index.html')
+        return render_template('homeindex.html')
     
     # add more routes here!
+    @app.route('/photo/')
+    def photo():
+        """Photo page"""
+        return render_template('photoindex.html')
+
+    @app.route('/another')
+    def another():
+        """Another page"""
+        return render_template('anotherindex.html')
+    
 
     return app
 
