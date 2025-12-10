@@ -32,7 +32,12 @@ logger = logging.getLogger(__name__)
 db_name = os.getenv('db_name')
 db_owner = os.getenv('db_owner')
 db_pass = os.getenv('db_pass')
-db_url = f"postgresql://{db_owner}:{db_pass}@localhost/{db_name}"
+
+# defaults to localhost for local dev
+db_host = os.getenv('db_host', 'localhost')
+# defaults to local port where postgres svr is running
+db_port = os.getenv('db_port', '5432') 
+db_url = f"postgresql://{db_owner}:{db_pass}@{db_host}:{db_port}/{db_name}"
 
 def create_app():
     """Create Flask application and connect to your DB"""
@@ -193,4 +198,4 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     # debug refreshes your application with your new changes every time you save
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

@@ -16,7 +16,13 @@ Base = declarative_base()
 db_name = os.getenv('db_name')
 db_owner = os.getenv('db_owner')
 db_pass = os.getenv('db_pass')
-db_url = f"postgresql://{db_owner}:{db_pass}@localhost/{db_name}"
+
+# defaults to localhost for local dev
+db_host = os.getenv('db_host', 'localhost')
+# defaults to local port where postgres svr is running
+db_port = os.getenv('db_port', '5432')
+db_url = f"postgresql://{db_owner}:{db_pass}@{db_host}:{db_port}/{db_name}"
+
 engine = create_engine(db_url)
 
 # a session is a workspace for your database operations

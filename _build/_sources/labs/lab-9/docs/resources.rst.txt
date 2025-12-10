@@ -1,0 +1,41 @@
+.. _`Resources`:
+
+Resources
+=========
+This section describes classes and functions private to CMPT221. It is intended to document how the application works
+
+labs.lab-1
+----------
+Learn how to make a pull request from VSC to Github
+
+labs.lab-2
+----------
+Install pip and create a virtual environment
+
+labs.lab-3
+----------
+Create and Connect to Postgres Database
+
+labs.lab-4
+----------
+SQL Alchemy ORM to write SQL commands
+
+labs.lab-5
+----------
+Create a bad GUI to know what makes a good one
+
+labs.lab-6
+----------
+Create a login and signup form 
+
+labs.lab-7
+----------
+Updated parts from labs.lab-6, nothing else new
+
+labs.lab-8
+----------
+Write test cases using pytest
+
+labs.lab-9
+----------
+Documentation using sphinx and .rst files
