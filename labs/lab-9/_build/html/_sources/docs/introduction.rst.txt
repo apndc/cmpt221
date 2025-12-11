@@ -1,0 +1,2 @@
+Welcome to the CMPT221 repo!
+All of our labs from the semester are here
