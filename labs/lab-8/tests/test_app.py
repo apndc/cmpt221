@@ -1,4 +1,45 @@
 # TODO: add five more unit test cases
+#Lab 8 Tests
+def test_signup_page_loads(client):
+    """Test that signup page loads"""
+    response = client.get('/signup')
+    assert response.status_code == 200
+
+
+def test_success_page_loads(client):
+    """Test that success page loads"""
+    response = client.get('/success')
+    assert response.status_code == 200
+
+
+def test_error_page_loads(client):
+    """Test that error page loads"""
+    response = client.get('/error')
+    assert response.status_code == 200
+
+
+def test_invalid_last_name(client):
+    """Test signup validation for invalid last name"""
+    response = client.post('/signup', data={
+        'FirstName': 'John',
+        'LastName': '123',  # invalid - contains numbers
+        'Email': 'john@test.com',
+        'PhoneNumber': '1234567890',
+        'Password': 'password123'
+    })
+    assert b'Last name can only contain letters' in response.data
+
+
+def test_missing_form_fields(client):
+    """Test signup when required form fields are missing"""
+    response = client.post('/signup', data={
+        'FirstName': '',
+        'LastName': '',
+        'Email': '',
+        'PhoneNumber': '',
+        'Password': ''
+    })
+    assert response.status_code in (200, 500)
 
 def test_home_page(client):
     """Test that home page loads"""
